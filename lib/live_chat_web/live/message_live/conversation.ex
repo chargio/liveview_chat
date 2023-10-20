@@ -1,4 +1,4 @@
-defmodule LiveChatWeb.MessageLive.Index do
+defmodule LiveChatWeb.MessageLive.Conversation do
   use LiveChatWeb, :live_view
 
   alias Phoenix.PubSub

@@ -13,7 +13,7 @@ defmodule LiveChatWeb.MessageLiveTest do
     %{message: message}
   end
 
-  describe "Index" do
+  describe "Chat" do
     setup [:create_message]
 
     test "lists all messages", %{conn: conn, message: message} do
@@ -74,40 +74,6 @@ defmodule LiveChatWeb.MessageLiveTest do
 
       assert index_live |> element("#messages-#{message.id} a", "Delete") |> render_click()
       refute has_element?(index_live, "#messages-#{message.id}")
-    end
-  end
-
-  describe "Show" do
-    setup [:create_message]
-
-    test "displays message", %{conn: conn, message: message} do
-      {:ok, _show_live, html} = live(conn, ~p"/messages/#{message}")
-
-      assert html =~ "Show Message"
-      assert html =~ message.name
-    end
-
-    test "updates message within modal", %{conn: conn, message: message} do
-      {:ok, show_live, _html} = live(conn, ~p"/messages/#{message}")
-
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Message"
-
-      assert_patch(show_live, ~p"/messages/#{message}/show/edit")
-
-      assert show_live
-             |> form("#message-form", message: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      assert show_live
-             |> form("#message-form", message: @update_attrs)
-             |> render_submit()
-
-      assert_patch(show_live, ~p"/messages/#{message}")
-
-      html = render(show_live)
-      assert html =~ "Message updated successfully"
-      assert html =~ "some updated name"
     end
   end
 end
