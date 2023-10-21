@@ -13,15 +13,16 @@
 
 </.table>
 
-<.simple_form
-    for={@form}
-    id="message-form"
-    phx-change="validate"
-    phx-submit="save"
->
-  <.input field={@form[:name]} type="text" label="Name" />
-  <.input field={@form[:content]} type="text" label="Content" />
-  <:actions>
-    <.button phx-disable-with="Saving...">Send</.button>
-  </:actions>
-</.simple_form>
+
+  <.simple_form
+      for={@form}
+      id="message-form"
+      phx-change="validate"
+      phx-submit="save"
+  >
+    <.input field={@form[:name]} type="text" label="Name" />
+    <.input field={@form[:content]} type="text" label="Content" />
+    <:actions>
+      <.button class="rounded bg-indigo-600 px-2 py-1 text-s font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" phx-disable-with="Saving...">Send</.button>
+    </:actions>
+  </.simple_form>
