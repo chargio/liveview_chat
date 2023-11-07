@@ -15,7 +15,7 @@ defmodule LiveChatWeb.Router do
   end
 
   scope "/", LiveChatWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_user]
 
     live "/", MessageLive.Conversation, :index
     live "/messages", MessageLive.Conversation, :index

@@ -1,4 +1,8 @@
 defmodule LiveChatWeb.MessageLive.Conversation do
+
+  @presence_topic "live_chat_presence"
+  @presence_pubsub "live_chat"
+
   use LiveChatWeb, :live_view
 
   alias Phoenix.PubSub
@@ -8,11 +12,14 @@ defmodule LiveChatWeb.MessageLive.Conversation do
 
   @impl true
   def mount(_params, _session, socket) do
-    new_form = to_form(Message.changeset(%Message{}, %{}))
-    socket = assign(socket, form: new_form)
+    socket = socket
+      |> assign_form(Message.changeset(%Message{}, %{}))
+      |> assign_messages()
 
-    if connected?(socket), do: subscribe()
-    {:ok, stream(socket, :messages,  Chats.list_messages())}
+    if connected?(socket) do
+      subscribe()
+    end
+    {:ok, socket}
   end
 
   @impl true
@@ -70,15 +77,22 @@ defmodule LiveChatWeb.MessageLive.Conversation do
     end
   end
 
+
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
 
+  defp assign_messages(socket) do
+    stream(socket, :messages,  Chats.list_messages())
+  end
+
   defp notify(:message_created, message) do
-    PubSub.broadcast(LiveChat.PubSub, "liveview_chat", {:message_created, message})
+    PubSub.broadcast(LiveChat.PubSub, @presence_pubsub, {:message_created, message})
   end
 
   defp subscribe() do
-    PubSub.subscribe(LiveChat.PubSub, "liveview_chat")
+    PubSub.subscribe(LiveChat.PubSub, @presence_pubsub)
   end
+
+
 end
